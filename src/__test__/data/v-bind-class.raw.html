@@ -1,0 +1,20 @@
+<div>
+  <span class="test control" />
+
+  <span v-bind:class="'test expression'" />
+
+  <span v-bind:class="[ 'array' ]" />
+
+  <span v-bind:class="{ test: true, true: true, false: false }" />
+  <span v-bind:class="{ test: 1, truthy: '0', noshow1: 0, noshow2: '', noshow3: null, noshow4: undefined }" />
+
+  <span v-bind:class="['test', 'set']" />
+
+  <span v-bind:class="[ 'hello goodbye', { hello: true, world: true }, [ 'hello', 'friend' ] ]" />
+
+  <span v-bind:class="['foo', false && 'bar', true && 'baz']" />
+
+  <span v-bind:class="[false && 'empty']" />
+
+  <span class="test" v-bind:class="{ test: true, true: true, false: false }" />
+</div>

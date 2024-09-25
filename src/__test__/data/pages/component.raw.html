@@ -1,0 +1,10 @@
+<template v-component="v-section">
+  <template v-slot:after-header="">
+    <div>after header</div>
+  </template>
+  <template v-slot:default="">
+    <div>default slot</div>
+  </template>
+</template>
+
+<template v-component="v-posts" v-bind:posts="posts.slice(0,1)"></template>

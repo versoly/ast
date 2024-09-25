@@ -1,0 +1,8 @@
+<body>
+  <template v-if="post.name">
+    <div class="bg-primary" a="b" v-text="post.name"></div>
+  </template>
+  <template v-for="post in posts">
+    <div v-text="post.title"></div>
+  </template>
+</body>

@@ -1,0 +1,12 @@
+<template v-for="post in posts">
+  <div v-text="post.title"></div>
+</template>
+
+<template v-for="post in posts.slice(0, 1)">
+  <div v-text="post.title"></div>
+</template>
+
+<template v-for="(post, postIndex) in posts">
+  <div v-text="post.title"></div>
+  <div v-text="postIndex"></div>
+</template>

@@ -1,0 +1,14 @@
+<template
+  v-component="card"
+  v-data="{'header': '${post.name}', 'btnColor': '${post.btnColor}', 'btnSize': '${post.btnSize}', 'btnFullWidth': '${post.btnFullWidth}'}"
+></template>
+
+<template
+  v-component="complex-component"
+  v-data="{'classNames':{'root':'py-24 bg-primary-50','row':'${classNames.row}'},'subheader':'aa','mediaFirst':false,'className':'','richText':'<p>Test</p><ul><li><p></p></li></ul><p></p>'}"
+></template>
+
+<template
+  v-component="complex-component"
+  v-data="{'classNames':{'root':'py-24 bg-primary-50','row':'${classNames.row}','nested':{'child': 'a'}, 'after': ''},'subheader':'aa','mediaFirst':false,'className':'','richText':'<p>Test</p><ul><li><p></p></li></ul><p></p>'}"
+></template>

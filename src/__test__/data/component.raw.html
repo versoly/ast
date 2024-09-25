@@ -1,0 +1,11 @@
+<div id="content-wrapper">
+  <header></header>
+  <slot name="after-header"></slot>
+  <h1>{title}</h1>
+  <slot></slot>
+  <slot name="fallback">only shown if fallback slot is not defined</slot>
+  <footer></footer>
+  <template v-if="$slots['after-footer']">
+    <slot name="after-footer"></slot>
+  </template>
+</div>

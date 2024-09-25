@@ -1,0 +1,160 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`basic 1`] = `
+"<div>{post.name}</div>
+"
+`;
+
+exports[`basicFor 1`] = `
+"{posts.map((post) => <div>{post.title}</div>
+)}
+{posts.slice(0, 1).map((post) => <div>{post.title}</div>
+)}
+{posts.map(((post, postIndex)) => (<>
+<div>{post.title}</div>
+<div>{postIndex}</div>
+</>)
+)}
+"
+`;
+
+exports[`basicIf 1`] = `
+"{post.name && <div>{post.name}</div>
+}
+{post.name && (<>
+<div>{post.name}</div>
+<div>{post.article}</div>
+</>)
+}
+"
+`;
+
+exports[`basicVBind 1`] = `
+"<div data-attr={post.name} data-options={{'imgSrc': post.image}} data-empty={{}} />
+"
+`;
+
+exports[`basicVHTML 1`] = `
+"<div set:html={post.html} />
+"
+`;
+
+exports[`component 1`] = `
+"<div id={'content-wrapper'}>
+<header />
+<slot name={'after-header'} />
+<h1>{title}</h1>
+<slot />
+<slot name={'fallback'}>only shown if fallback slot is not defined</slot>
+<footer />
+{Astro.slots.has("after-footer") && <slot name={'after-footer'} />
+}
+
+</div>"
+`;
+
+exports[`componentVData 1`] = `
+"import Card from './components/Card';
+import ComplexComponent from './components/ComplexComponent';
+import ComplexComponent from './components/ComplexComponent';
+
+---
+<Card header={post.name} btnColor={post.btnColor} btnSize={post.btnSize} btnFullWidth={post.btnFullWidth} />
+<ComplexComponent classNames={{ root: 'py-24 bg-primary-50', row: classNames.row }} subheader={'aa'} mediaFirst={false} className={''} richText={'<p>Test</p><ul><li><p></p></li></ul><p></p>'} />
+<ComplexComponent classNames={{ root: 'py-24 bg-primary-50', row: classNames.row, nested: { child: 'a' }, after: '' }} subheader={'aa'} mediaFirst={false} className={''} richText={'<p>Test</p><ul><li><p></p></li></ul><p></p>'} />
+"
+`;
+
+exports[`files 1`] = `
+[
+  {
+    "content": "
+const { header = "Header", subheader = "Subheader", btnColor = "primary", btnSize, btnFullWidth } = Astro.props;
+---
+<section>
+<h1>{header}</h1>
+<p>{subheader}</p>
+<button class:list={['btn', {btnColor: btnColor, btnSize: btnSize, btnFullWidth: btnFullWidth}]} />
+
+</section>",
+    "path": "components/v-section.astro",
+  },
+  {
+    "content": "<section>
+<h1>{header}</h1>
+<p>{subheader}</p>
+<button class:list={['btn', {btnColor: btnColor, btnSize: btnSize, btnFullWidth: btnFullWidth}]} />
+
+</section>",
+    "path": "pages/index.astro",
+  },
+]
+`;
+
+exports[`nestedComponent 1`] = `
+"import NestedComponent from './components/NestedComponent';
+
+---
+<div>
+<NestedComponent />
+
+</div>"
+`;
+
+exports[`pagesComponent 1`] = `
+"import VSection from './components/VSection';
+import VPosts from './components/VPosts';
+
+---
+<VSection>
+<Fragment slot={'after-header'}>
+<div>after header</div>
+
+</Fragment><Fragment slot={'default'}>
+<div>default slot</div>
+
+</Fragment>
+</VSection><VPosts posts={posts.slice(0,1)} />
+"
+`;
+
+exports[`script 1`] = `
+"<script>
+  console.log('Hello, world!');
+</script>
+"
+`;
+
+exports[`vBindClass 1`] = `
+"<div>
+<span class={'test control'} />
+<span class:list={'test expression'} />
+<span class:list={[ 'array' ]} />
+<span class:list={{ test: true, true: true, false: false }} />
+<span class:list={{ test: 1, truthy: '0', noshow1: 0, noshow2: '', noshow3: null, noshow4: undefined }} />
+<span class:list={['test', 'set']} />
+<span class:list={[ 'hello goodbye', { hello: true, world: true }, [ 'hello', 'friend' ] ]} />
+<span class:list={['foo', false && 'bar', true && 'baz']} />
+<span class:list={[false && 'empty']} />
+<span class:list={['test', { test: true, true: true, false: false }]} />
+
+</div>"
+`;
+
+exports[`vBindStyle 1`] = `
+"<div>
+<span style={'background-color:green'} />
+<span style={'background-color:red'} />
+<span style={{backgroundColor:'blue'}} />
+<span style={{backgroundImage:'url(} />
+
+</div>"
+`;
+
+exports[`vDate 1`] = `
+"<div>
+<p>{getFormattedDate(post.updatedAt)}</p>
+<p>{getFormattedDate(post.updatedAt)}</p>
+
+</div>"
+`;
