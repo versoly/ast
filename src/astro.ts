@@ -1,6 +1,7 @@
 import { parseSync, printSync } from '@swc/core';
-import { kebabCaseToPascal } from './utils';
-import { ParsedNode } from './types';
+import { capitalizeFirstLetter, kebabCaseToPascal } from './utils';
+import type { ComponentProperty, ParsedNode, VersolyComponent } from './types';
+import { getJSTypeFromVersolyType } from './utils/versoly';
 
 const vueOnlyProperties = ['v-if', 'v-else', 'v-else-if', 'v-for', 'v-text', 'v-html', 'v-component'];
 
@@ -435,11 +436,7 @@ const getFormattedNode = (node: any) => {
       };
     } else {
       if (value.includes('|date')) {
-        value = `vDateFormat(${value.split('|')[0]})`;
-      }
-
-      if (value.includes('vDateFormat')) {
-        value = value.replace('vDateFormat(', 'getFormattedDate(');
+        value = `$d(${value.split('|')[0]})`;
       }
 
       properties[key] = value;
@@ -484,8 +481,6 @@ const getFormattedNode = (node: any) => {
     };
   }
 
-  // <template v-component="component-name" posts="posts.slice(0,1)" />
-  // <ComponentName posts={posts.slice(0,1)} />
   if (propertyKeys.includes('v-component')) {
     tag = kebabCaseToPascal(properties['v-component'] || '');
     imports.push({
@@ -516,12 +511,13 @@ const getFormattedNode = (node: any) => {
 
 type PrintAstro = {
   ast: ParsedNode[];
-  component?: any;
+  component?: VersolyComponent | undefined;
 };
 
 export const printAstro = ({ ast, component }: PrintAstro) => {
+  let interfaceStr = '';
+  let astroStr = '';
   let jsx = '';
-  let importsStr = '';
 
   const renderNode = (n: ParsedNode) => {
     const node = getFormattedNode(n);
@@ -661,40 +657,100 @@ export const printAstro = ({ ast, component }: PrintAstro) => {
       const { imports, path } = importNode;
       const importKeys = Object.keys(imports);
 
-      importsStr += `import ${importKeys.join(', ')} from '${path}';\n`;
+      astroStr += `import ${importKeys.join(', ')} from '${path}';\n`;
     });
   };
 
   ast.forEach(renderNode);
 
-  if (component?.properties) {
-    let propertiesList: string[] = [];
+  if (component?.properties && component.properties.length > 0) {
+    const { properties } = component;
+    const groupSlugsWithNesting = (component.groups || [])
+      ?.filter((g) => g.nestProperties && properties.some((p) => p.group === g.slug))
+      .map((g) => g.slug)
+      .sort();
 
-    Object.keys(component.properties).forEach((propertyKey) => {
-      const property = component.properties[propertyKey];
-      const { type, default: defaultValue } = property;
+    const processProperty = (property: ComponentProperty) => {
+      const { slug, defaultValue } = property;
 
-      let propertiesStr = propertyKey;
+      const type = getJSTypeFromVersolyType(property.type);
 
-      if (defaultValue) {
+      let propertiesStr = '';
+
+      if (defaultValue !== undefined) {
         if (type === 'string') {
-          propertiesStr += ` = "${defaultValue}"`;
+          propertiesStr = `"${defaultValue}"`;
         }
 
         if (type === 'boolean') {
-          propertiesStr += ` = ${defaultValue}`;
+          propertiesStr = `${defaultValue}`;
         }
       }
 
-      propertiesList.push(propertiesStr);
+      return [slug, propertiesStr];
+    };
+
+    const propsWithoutGroups = properties.filter(({ group }) => !group || !groupSlugsWithNesting.includes(group));
+
+    let propsStr = propsWithoutGroups
+      .map(processProperty)
+      .map(([slug, props]) => `${slug} = ${props}`)
+      .join(', ');
+
+    if (propsStr) {
+      astroStr += `const { ${propsStr} } = Astro.props;\n`;
+    }
+
+    groupSlugsWithNesting.forEach((groupSlug) => {
+      const filteredProps = properties.filter((property) => property.group === groupSlug);
+
+      if (filteredProps.length === 0) {
+        return;
+      }
+
+      let interfacePropsList = filteredProps.map((p) => {
+        return [p.slug, getJSTypeFromVersolyType(p.type)];
+      });
+
+      interfaceStr = [
+        `interface I${capitalizeFirstLetter(groupSlug)} {`,
+        ...interfacePropsList.map(([slug, type]) => `  ${slug}?: ${type};`),
+        '}',
+        interfaceStr,
+      ].join('\n');
+
+      propsStr = filteredProps
+        .map(processProperty)
+        .filter(([_, props]) => !!props)
+        .map(([slug, props]) => `${slug}: ${props}`)
+        .join(', ');
+
+      if (!propsStr) {
+        return;
+      }
+
+      astroStr += `const ${groupSlug} = { ...Astro.props.${groupSlug}, ${propsStr} };\n`;
     });
 
-    importsStr = `\nconst { ${propertiesList.join(', ')} } = Astro.props;`;
+    let interfacePropsList = propsWithoutGroups.map((p) => {
+      return [p.slug, getJSTypeFromVersolyType(p.type)];
+    });
+
+    groupSlugsWithNesting.forEach((groupSlug) => {
+      interfacePropsList.push([groupSlug, 'I' + capitalizeFirstLetter(groupSlug)]);
+    });
+
+    interfaceStr = [
+      'interface Props {',
+      ...interfacePropsList.map(([slug, type]) => `  ${slug}?: ${type};`),
+      '}',
+      interfaceStr,
+    ].join('\n');
   }
 
-  if (importsStr) {
-    importsStr += '\n---\n';
+  if (!astroStr) {
+    return jsx;
   }
 
-  return importsStr + jsx;
+  return ['---', interfaceStr, astroStr, '---', jsx].filter(Boolean).join('\n');
 };

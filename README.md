@@ -1,4 +1,4 @@
-# my-package-name
+# Versoly AST
 
 [![npm package][npm-img]][npm-url] [![Build Status][build-img]][build-url] [![Downloads][downloads-img]][downloads-url] [![Issues][issues-img]][issues-url] [![Code Coverage][codecov-img]][codecov-url] [![Commitizen Friendly][commitizen-img]][commitizen-url] [![Semantic Release][semantic-release-img]][semantic-release-url]
 
@@ -11,9 +11,12 @@ pnpm install @versoly/ast
 ## Usage
 
 ```ts
-import { parse } from '@versoly/ast';
+import { parse, printAstro } from '@versoly/ast';
 
 const ast = parse('<h1>Hello</h1>');
+const content = printAstro({ ast });
+console.log(content);
+// <h1>Hello</h1>
 ```
 
 [build-img]: https://github.com/versoly/ast/actions/workflows/release.yml/badge.svg

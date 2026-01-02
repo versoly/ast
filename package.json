@@ -1,24 +1,22 @@
 {
   "name": "@versoly/ast",
-  "version": "0.0.1",
-  "description": "A simple package to parse Versoly HTML and compile as Astro",
+  "version": "0.0.2",
+  "description": "Parse Versoly HTML and compile as Astro",
   "sideEffects": false,
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    }
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsdown",
+    "dev": "tsdown --watch",
     "cm": "cz",
     "clean": "rimraf lib",
     "lint": "eslint src",
@@ -37,14 +35,11 @@
     "url": "https://versoly.com"
   },
   "engines": {
-    "node": ">=20.0"
+    "node": ">=22.18.0"
   },
   "keywords": [
-    "boilerplate",
-    "template",
-    "typescript",
-    "vscode",
-    "semantic-release"
+    "vue-to-react",
+    "vue-to-astro"
   ],
   "bugs": {
     "url": "https://github.com/versoly/ast/issues"
@@ -63,8 +58,8 @@
     "@semantic-release/github": "^10.0.2",
     "@semantic-release/npm": "^12.0.0",
     "@semantic-release/release-notes-generator": "^12.1.0",
-    "@types/node": "^20.11.29",
-    "@vitest/coverage-v8": "^2.1.1",
+    "@types/node": "^22.17.2",
+    "@vitest/coverage-v8": "^4.0.16",
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "npm:eslint-ts-patch@8.56.0-0",
@@ -75,11 +70,10 @@
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
     "semantic-release": "^23.0.5",
-    "ts-node": "^10.9.2",
-    "tsup": "^8.2.4",
+    "tsdown": "^0.18.3",
     "type-fest": "^4.26.1",
-    "typescript": "^5.6",
-    "vitest": "^2.1.1"
+    "typescript": "^5.9.2",
+    "vitest": "^4.0.16"
   },
   "config": {
     "commitizen": {

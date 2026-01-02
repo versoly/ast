@@ -58,8 +58,7 @@ Object.keys(BASIC_TESTS).forEach((key) => {
 
 const generateFiles = (files: typeof fixtures.files) => {
   return files.map((fileData) => {
-    const { content, path } = fileData;
-    let properties = fileData.properties;
+    const { content, path, component } = fileData;
     const ast = parse(content);
 
     let filePath = path;
@@ -72,8 +71,7 @@ const generateFiles = (files: typeof fixtures.files) => {
       filePath = `pages/${path}.astro`;
     }
 
-    const printedContent = printAstro({ ast, component: { properties } });
-
+    const printedContent = printAstro({ ast, component });
     return {
       path: filePath,
       content: printedContent,

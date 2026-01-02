@@ -6,7 +6,10 @@ exports[`basic 1`] = `
 `;
 
 exports[`basicFor 1`] = `
-"{posts.map((post) => <div>{post.title}</div>
+"{posts.map((post) => (<>
+<img src={post.image} />
+<div>{post.title}</div>
+</>)
 )}
 {posts.slice(0, 1).map((post) => <div>{post.title}</div>
 )}
@@ -54,7 +57,8 @@ exports[`component 1`] = `
 `;
 
 exports[`componentVData 1`] = `
-"import Card from './components/Card';
+"---
+import Card from './components/Card';
 import ComplexComponent from './components/ComplexComponent';
 import ComplexComponent from './components/ComplexComponent';
 
@@ -68,8 +72,26 @@ import ComplexComponent from './components/ComplexComponent';
 exports[`files 1`] = `
 [
   {
-    "content": "
-const { header = "Header", subheader = "Subheader", btnColor = "primary", btnSize, btnFullWidth } = Astro.props;
+    "content": "<section>
+<h1>{header}</h1>
+<p>{subheader}</p>
+<button class:list={['btn', {btnColor: btnColor, btnSize: btnSize, btnFullWidth: btnFullWidth}]} />
+
+</section>",
+    "path": "pages/index.astro",
+  },
+  {
+    "content": "---
+interface Props {
+  header?: string;
+  subheader?: string;
+  btnColor?: string;
+  btnSize?: string;
+  btnFullWidth?: boolean;
+}
+
+const { header = "Header", subheader = "Subheader", btnColor = "primary", btnSize = , btnFullWidth = false } = Astro.props;
+
 ---
 <section>
 <h1>{header}</h1>
@@ -80,19 +102,38 @@ const { header = "Header", subheader = "Subheader", btnColor = "primary", btnSiz
     "path": "components/v-section.astro",
   },
   {
-    "content": "<section>
-<h1>{header}</h1>
+    "content": "---
+interface Props {
+  header?: string;
+  subheader?: string;
+  useH2Tag?: boolean;
+  classNames?: IClassNames;
+}
+interface IClassNames {
+  root?: string;
+  header?: string;
+}
+
+const { header = "Header", subheader = "Subheader", useH2Tag = false } = Astro.props;
+const classNames = { ...Astro.props.classNames, root: "py-20" };
+
+---
+<section class:list={classNames.root}>
+{!useH2Tag && <h1 class:list={classNames.header}>{header}</h1>
+}
+{useH2Tag && <h2 class:list={classNames.header}>{header}</h2>
+}
 <p>{subheader}</p>
-<button class:list={['btn', {btnColor: btnColor, btnSize: btnSize, btnFullWidth: btnFullWidth}]} />
 
 </section>",
-    "path": "pages/index.astro",
+    "path": "components/v-section-classnames.astro",
   },
 ]
 `;
 
 exports[`nestedComponent 1`] = `
-"import NestedComponent from './components/NestedComponent';
+"---
+import NestedComponent from './components/NestedComponent';
 
 ---
 <div>
@@ -102,7 +143,8 @@ exports[`nestedComponent 1`] = `
 `;
 
 exports[`pagesComponent 1`] = `
-"import VSection from './components/VSection';
+"---
+import VSection from './components/VSection';
 import VPosts from './components/VPosts';
 
 ---
@@ -143,18 +185,18 @@ exports[`vBindClass 1`] = `
 
 exports[`vBindStyle 1`] = `
 "<div>
-<span style={'background-color:green'} />
+<span style={'background-color: green'} />
 <span style={'background-color:red'} />
 <span style={{backgroundColor:'blue'}} />
-<span style={{backgroundImage:'url(} />
+<span style={{'background-image':'url(a)'}} />
 
 </div>"
 `;
 
 exports[`vDate 1`] = `
 "<div>
-<p>{getFormattedDate(post.updatedAt)}</p>
-<p>{getFormattedDate(post.updatedAt)}</p>
+<p>{$d(post.updatedAt)}</p>
+<p>{$d(post.updatedAt)}</p>
 
 </div>"
 `;

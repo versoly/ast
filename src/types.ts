@@ -24,3 +24,20 @@ export type ParsedCommentNode = {
 };
 
 export type ParsedNode = ParsedElementNode | ParsedTextNode | ParsedCommentNode;
+
+export type ComponentGroup = { name: string; slug: string; nestProperties?: boolean };
+export type ComponentGroupsList = ComponentGroup[];
+
+export type ComponentProperty = {
+  slug: string;
+  type: string;
+  group?: string | null | undefined;
+  defaultValue?: string | boolean;
+};
+
+export type ComponentPropertiesList = ComponentProperty[];
+
+export type VersolyComponent = {
+  groups?: ComponentGroupsList | undefined;
+  properties?: ComponentPropertiesList | undefined;
+};

@@ -1,4 +1,4 @@
 <div>
   <p v-text="post.updatedAt|date"></p>
-  <p v-text="vDateFormat(post.updatedAt)"></p>
+  <p v-text="$d(post.updatedAt)"></p>
 </div>

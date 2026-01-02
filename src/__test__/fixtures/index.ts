@@ -1,21 +1,28 @@
+import { ComponentGroupsList, ComponentPropertiesList } from 'src/types';
 import components from './components';
 import pages from './pages';
 
-type ComponentProperty = {
-  type: string;
-  default?: string | boolean;
-};
-
-type ComponentProperties = {
-  [key: string]: ComponentProperty;
-};
-
-const files: {
+let files: {
   type: string;
   path: string;
   content: string;
-  properties?: ComponentProperties;
-}[] = [...components, ...pages];
+  component?:
+    | {
+        properties: ComponentPropertiesList;
+        groups?: ComponentGroupsList;
+      }
+    | undefined;
+}[] = pages;
+
+components.forEach((component) => {
+  const { name, html } = component;
+  files.push({
+    type: 'component',
+    path: `${name}`,
+    content: html,
+    component,
+  });
+});
 
 export default {
   files,

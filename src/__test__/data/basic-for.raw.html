@@ -1,4 +1,5 @@
 <template v-for="post in posts">
+  <img v-bind:src="post.image" />
   <div v-text="post.title"></div>
 </template>
 
